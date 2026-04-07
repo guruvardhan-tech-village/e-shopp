@@ -1,0 +1,93 @@
+.home-container {
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: calc(100vh - 80px);
+}
+
+.home-header {
+  background: white;
+  padding: 16px 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.breadcrumb {
+  color: #666;
+  font-size: 14px;
+}
+
+.filter-section {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-section label {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.filter-section select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.filter-section select:hover {
+  border-color: #999;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.loading,
+.error-message,
+.no-products {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 16px;
+  color: #666;
+  background: white;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+.error-message {
+  color: #c41e3a;
+  background: #ffe0e0;
+  border-left: 4px solid #c41e3a;
+}
+
+.loading {
+  font-weight: 500;
+  color: #0066cc;
+}
