@@ -1,26 +1,44 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import API from "../api/api";
 import "./Navbar.css";
 
-function Navbar() {
+function Navbar({ setProducts }) {
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+
+  const searchProducts = async () => {
+    const res = await API.get(`/ai-search?query=${query}`);
+    setProducts(res.data.data);
+  };
+
+  useEffect(() => {
+    if (!query) {
+      setSuggestions([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      const res = await API.get(`/suggest?keyword=${query}`);
+      setSuggestions(res.data.data);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query]);
+
   return (
     <div className="navbar">
-      
-      {/* Logo */}
-      <h2 className="logo">Amazon</h2>
+          <div className="logo">Amazon</div>
 
-      {/* Search Bar */}
-      <input
-        type="text"
-        placeholder="Search products..."
-        className="search"
-      />
+          <div className="search-box">
+              <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search Amazon" />
+              <button onClick={searchProducts}>🔍</button>
+          </div>
 
-      {/* Cart */}
-      <div className="cart">
-        🛒 Cart
+          <div className="cart">🛒</div>
       </div>
-
-    </div>
   );
 }
 
