@@ -20,11 +20,12 @@ public class Products {
     private String category;
     private String status;
     private int quantity;
+    private String imageUrl;
 
     public Products() {
     }
 
-    public Products(String name, String description, Double price, String companyName, String category,String status, int quantity) {
+    public Products(String name, String description, Double price, String companyName, String category,String status, int quantity, String imageUrl) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -32,7 +33,7 @@ public class Products {
         this.category = category;
         this.status = status;
         this.quantity = quantity;
-        
+        this.imageUrl = imageUrl;
     }
     
     public Long getId() {
@@ -82,6 +83,12 @@ public class Products {
     }
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }

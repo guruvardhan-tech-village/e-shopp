@@ -1,6 +1,7 @@
 package com.ai_ecommerce.ecommerce.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 public class ProductDTO {
 
@@ -18,6 +19,8 @@ public class ProductDTO {
     private String status;
     @Min(value = 0, message = "Quantity must have value greater than or equal to zero")
     private int quantity;
+    @NotBlank(message = "Image URL is required")
+    private String imageUrl;
 
     public String getName() {
         return name;
@@ -60,6 +63,12 @@ public class ProductDTO {
     }
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }

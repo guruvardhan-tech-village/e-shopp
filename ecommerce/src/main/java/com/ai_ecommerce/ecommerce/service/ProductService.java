@@ -29,6 +29,7 @@ public class ProductService {
         products.setCategory(productDTO.getCategory());
         products.setStatus(productDTO.getStatus());
         products.setQuantity(productDTO.getQuantity());
+        products.setImageUrl(productDTO.getImageUrl());
 
         productRepository.save(products);
         return """
@@ -38,7 +39,8 @@ public class ProductService {
         "\nPrice: "+products.getPrice()+
         "\nCompany Name: "+products.getCompanyName()+
         "\nStatus: "+products.getStatus()+
-        "\nQuantity: "+products.getQuantity();
+        "\nQuantity: "+products.getQuantity()+
+        "\nImage URL: "+products.getImageUrl();
     }
 
     public List<Products> getAllProducts() {
@@ -76,6 +78,7 @@ public class ProductService {
             existingProduct.setCategory(products.getCategory());
             existingProduct.setStatus(products.getStatus());
             existingProduct.setQuantity(products.getQuantity());
+            existingProduct.setImageUrl(products.getImageUrl());
             productRepository.save(existingProduct);
             return "Product with ID "+id+" updated successfully.";
         }).orElse("Product with ID "+id+" not found.");
@@ -114,4 +117,5 @@ public class ProductService {
             .limit(5)
             .toList();
     }
+
 }
