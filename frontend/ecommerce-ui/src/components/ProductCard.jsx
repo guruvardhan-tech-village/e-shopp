@@ -12,8 +12,8 @@ function ProductCard({ product, onAddToCart }) {
     <div className="product-card">
       <div className="product-image">
         <img
-          src={product.image || "https://via.placeholder.com/200"}
-          alt={product.name}
+          src={product.imageUrl || product.image || product.image_url || "https://via.placeholder.com/250x250?text=No+Image"}
+          alt={product.name || "Product image"}
           onClick={handleViewDetails}
         />
       </div>

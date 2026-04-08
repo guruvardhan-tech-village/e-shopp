@@ -65,6 +65,8 @@ function ProductDetails({ setCartCount }) {
     );
   }
 
+  const productImage = product.imageUrl || product.image || product.image_url || "https://via.placeholder.com/400x400?text=No+Image";
+
   return (
     <div className="product-details-container">
       <button onClick={() => navigate("/")} className="back-btn">
@@ -74,17 +76,17 @@ function ProductDetails({ setCartCount }) {
       <div className="product-details">
         <div className="product-image-section">
           <img
-            src={product.image || "https://via.placeholder.com/400"}
-            alt={product.name}
+            src={productImage}
+            alt={product.name || "Product image"}
             className="product-image-large"
           />
           <div className="image-gallery">
             <img
-              src={product.image || "https://via.placeholder.com/100"}
+              src={productImage}
               alt="Thumbnail 1"
             />
             <img
-              src={product.image || "https://via.placeholder.com/100"}
+              src={productImage}
               alt="Thumbnail 2"
             />
           </div>
