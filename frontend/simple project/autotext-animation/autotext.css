@@ -8,7 +8,8 @@ body{
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #fe9696;
+    background:rgb(240, 239, 238);
+    color: #6e8773;
     font-family: 'Saira Stencil', sans-serif;
 }
 
