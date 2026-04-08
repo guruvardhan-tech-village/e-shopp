@@ -8,8 +8,8 @@ body{
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background:rgb(240, 239, 238);
-    color: #6e8773;
+    background:rgb(239, 234, 230);
+    color: #576d5b;
     font-family: 'Saira Stencil', sans-serif;
 }
 
@@ -22,3 +22,4 @@ body{
   font-variation-settings:
     "wdth" 100;
 } */
+ 
