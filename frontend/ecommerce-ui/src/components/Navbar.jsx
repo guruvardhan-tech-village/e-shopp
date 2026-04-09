@@ -51,7 +51,7 @@ function Navbar({ cartCount }) {
   return (
     <div className="navbar">
       <Link to="/" className="logo">
-        <span className="logo-text">Amazon</span>
+        <span className="logo-text"><img src="/amazon_logo.png" alt="Logo" /></span>
       </Link>
 
       <div className="search-box">
