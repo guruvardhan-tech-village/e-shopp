@@ -23,105 +23,147 @@ import com.ai_ecommerce.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("/products")
+@CrossOrigin(origins = "http://localhost:5173") // FIXED
+@RequestMapping("/api/products") // FIXED
 public class ProductController {
-    
-    private final ProductService productService;
 
+    private final ProductService productService;
     private final AISearchService aiSearchService;
 
     public ProductController(ProductService productService, AISearchService aiSearchService) {
         this.productService = productService;
         this.aiSearchService = aiSearchService;
     }
+
+    // ✅ ADD PRODUCT
     @PostMapping
-    public ApiResponse addProduct(@Valid @RequestBody ProductDTO dto){
-        String result = productService.addProducts(dto);
+    public ApiResponse addProduct(@Valid @RequestBody ProductDTO dto) {
+        Products result = productService.addProducts(dto);
         return new ApiResponse("Product added successfully", result, 201);
     }
 
-    // @PostMapping
-    // public String addProduct(@Valid @RequestBody ProductDTO dto){
-    //     return productService.addProducts(dto);
-    // }
-
+    // ✅ BULK ADD
     @PostMapping("/bulk")
     public ApiResponse addProducts(@RequestBody List<ProductDTO> dtos) {
-
         dtos.forEach(productService::addProducts);
-
         return new ApiResponse("Bulk products added", dtos.size(), 201);
     }
 
-    // @GetMapping("/getAllProducts")
-    // public List<Products> getAllproducts(){
-    //     return productService.getAllProducts();
-    // }
+    // ✅ GET ALL PRODUCTS
     @GetMapping
     public ApiResponse getAllProducts() {
         return new ApiResponse(
-            "Products fetched",
-            productService.getAllProducts(),
-            200
+                "Products fetched",
+                productService.getAllProducts(),
+                200
         );
     }
+
+    // ✅ GET SINGLE PRODUCT (IMPORTANT - ADD THIS)
+    @GetMapping("/{id}")
+    public ApiResponse getProductById(@PathVariable Long id) {
+        return new ApiResponse(
+                "Product fetched",
+                productService.getProductById(id),
+                200
+        );
+    }
+
+    // ✅ FILTER BY COMPANY
     @GetMapping("/company")
-    public List<Products> getProductsByCompanyName(@RequestParam String companyName){
-        return productService.findByCompanyName(companyName);
+    public ApiResponse getProductsByCompanyName(@RequestParam String companyName) {
+        return new ApiResponse(
+                "Products by company",
+                productService.findByCompanyName(companyName),
+                200
+        );
     }
+
+    // ✅ FILTER BY PRICE
     @GetMapping("/price-range")
-    public List<Products> getProductsByPriceRange(@RequestParam double min, @RequestParam double max){
-        return productService.findByPriceBetween(min, max);
+    public ApiResponse getProductsByPriceRange(@RequestParam double min,
+                                               @RequestParam double max) {
+        return new ApiResponse(
+                "Products in range",
+                productService.findByPriceBetween(min, max),
+                200
+        );
     }
+
+    // ✅ DELETE
     @DeleteMapping("/{id}")
-    public String deleteProductById(@PathVariable Long id) {
-        return productService.deleteProductById(id);
+    public ApiResponse deleteProduct(@PathVariable Long id) {
+        return new ApiResponse(
+                productService.deleteProductById(id),
+                null,
+                200
+        );
     }
+
+    // ✅ UPDATE
+    @PutMapping("/{id}")
+    public ApiResponse updateProduct(@PathVariable Long id,
+                                     @RequestBody Products updatedProduct) {
+        return new ApiResponse(
+                productService.updateProduct(id, updatedProduct),
+                null,
+                200
+        );
+    }
+
+    // ✅ PAGINATION
     @GetMapping("/page")
-    public Page<Products> getProductsWithPagination(@RequestParam int page, @RequestParam int size) {
+    public Page<Products> getProductsWithPagination(@RequestParam int page,
+                                                    @RequestParam int size) {
         return productService.getProductsWithPagination(page, size);
     }
+
+    // ✅ SORT + PAGINATION
     @GetMapping("/page-sort")
-    public Page<Products> getProductsWithPaginationAndSort(@RequestParam int page, @RequestParam int size, @RequestParam String sortBy) {
+    public Page<Products> getProductsWithPaginationAndSort(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String sortBy) {
         return productService.getProductsWithPaginationAndSort(page, size, sortBy);
     }
-    @PutMapping("/{id}")
-    public String updateProduct(
-        @PathVariable Long id, 
-        @RequestBody Products updatedProduct) {
-        return productService.updateProduct(id, updatedProduct);
-    }
+
+    // ✅ NORMAL SEARCH
     @GetMapping("/search")
     public ApiResponse search(@RequestParam String keyword) {
         return new ApiResponse(
-            "Search results",
-            productService.searchProducts(keyword),
-            200
+                "Search results",
+                productService.searchProducts(keyword),
+                200
         );
     }
+
+    // ✅ RECOMMEND
     @GetMapping("/recommend")
-    public ApiResponse searchByCategory(@RequestParam String category) {
+    public ApiResponse recommend(@RequestParam String category) {
         return new ApiResponse(
-            "Recommended products"+category,
-            productService.recommendProducts(category),
-            200
+                "Recommended products",
+                productService.recommendProducts(category),
+                200
         );
     }
+
+    // ✅ SUGGESTIONS
     @GetMapping("/suggest")
-    public ApiResponse getSuggestions(@RequestParam String keyword) {
+    public ApiResponse suggestions(@RequestParam String keyword) {
         return new ApiResponse(
-            "Suggestions",
-            productService.getSuggestions(keyword),
-            200
+                "Suggestions",
+                productService.getSuggestions(keyword),
+                200
         );
     }
+
+    // ✅ AI SEARCH
     @GetMapping("/ai-search")
     public ApiResponse aiSearch(@RequestParam String query) {
         return new ApiResponse(
-            "AI search results",
-            aiSearchService.smartSearch(query),
-            200
+                "AI search results",
+                aiSearchService.smartSearch(query),
+                200
         );
     }
 }

@@ -20,25 +20,28 @@ public class AISearchService {
         String lowerQuery = query.toLowerCase();
         String[] words = lowerQuery.split(" ");
 
-        double[] priceRange = {0, Double.MAX_VALUE};
+        double minPrice = 0;
+        double maxPrice = Double.MAX_VALUE;
 
-        if (lowerQuery.contains("cheap")) priceRange[1] = 10000;
-        if (lowerQuery.contains("expensive")) priceRange[0] = 50000;
-
+        // 🎯 Price extraction
         for (int i = 0; i < words.length; i++) {
             if (words[i].equals("under") && i + 1 < words.length) {
                 try {
-                    priceRange[1] = Double.parseDouble(words[i + 1]);
-                } catch (Exception e) {}
+                    maxPrice = Double.parseDouble(words[i + 1]);
+                } catch (Exception ignored) {}
             }
 
             if (words[i].equals("above") && i + 1 < words.length) {
                 try {
-                    priceRange[0] = Double.parseDouble(words[i + 1]);
-                } catch (Exception e) {}
+                    minPrice = Double.parseDouble(words[i + 1]);
+                } catch (Exception ignored) {}
             }
         }
 
+        if (lowerQuery.contains("cheap")) maxPrice = 10000;
+        if (lowerQuery.contains("expensive")) minPrice = 50000;
+
+        // 🎯 Extract keywords
         List<String> keywords = new ArrayList<>();
 
         for (String word : words) {
@@ -52,42 +55,28 @@ public class AISearchService {
             }
         }
 
+        // Synonyms
         if (keywords.contains("mobile") || keywords.contains("mobiles")) {
             keywords.add("phone");
         }
 
-        return productRepository.findAll()
-            .stream()
-            .filter(p -> {
+        List<Products> products = productRepository.findAll();
 
-                boolean matchesKeyword = keywords.isEmpty() || keywords.stream()
-                .allMatch(k -> 
-                    p.getName().toLowerCase().contains(k) ||
-                    p.getCategory().toLowerCase().contains(k) ||
-                    p.getCompanyName().toLowerCase().contains(k)
-                );
+        return products.stream()
+                .filter(p -> p.getName() != null && p.getCategory() != null)
+                .filter(p -> {
 
-                boolean matchesPrice = p.getPrice() >= priceRange[0] && p.getPrice() <= priceRange[1];
+                    boolean keywordMatch = keywords.isEmpty() || keywords.stream()
+                            .anyMatch(k ->
+                                    p.getName().toLowerCase().contains(k) ||
+                                    p.getCategory().toLowerCase().contains(k) ||
+                                    p.getCompanyName().toLowerCase().contains(k)
+                            );
 
-                return matchesKeyword && matchesPrice;
-            })
-            .sorted((p1, p2) -> {
-                int score1 = calculateScore(p1, keywords);
-                int score2 = calculateScore(p2, keywords);
-                return Integer.compare(score2, score1);
-            })
-            .toList();
-    }
+                    boolean priceMatch = p.getPrice() >= minPrice && p.getPrice() <= maxPrice;
 
-    private int calculateScore(Products p, List<String> keywords) {
-        int score = 0;
-
-        for (String k : keywords) {
-            if (p.getName().toLowerCase().contains(k)) score += 3;
-            if (p.getCategory().toLowerCase().contains(k)) score += 2;
-            if (p.getCompanyName().toLowerCase().contains(k)) score += 1;
-        }
-
-        return score;
+                    return keywordMatch && priceMatch;
+                })
+                .toList();
     }
 }
