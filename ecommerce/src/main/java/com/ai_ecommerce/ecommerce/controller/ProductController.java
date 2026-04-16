@@ -93,9 +93,11 @@ public class ProductController {
     // ✅ DELETE
     @DeleteMapping("/{id}")
     public ApiResponse deleteProduct(@PathVariable Long id) {
+        // Note: If deleteProductById returns void, move it outside the return statement
+        // like: productService.deleteProductById(id);
         return new ApiResponse(
-                productService.deleteProductById(id),
-                null,
+                "Product deleted successfully",
+                productService.deleteProductById(id), // Can safely pass a returned String/Object here, or replace with null if it returns void
                 200
         );
     }
@@ -105,8 +107,8 @@ public class ProductController {
     public ApiResponse updateProduct(@PathVariable Long id,
                                      @RequestBody Products updatedProduct) {
         return new ApiResponse(
+                "Product updated successfully",
                 productService.updateProduct(id, updatedProduct),
-                null,
                 200
         );
     }

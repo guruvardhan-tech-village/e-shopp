@@ -38,8 +38,12 @@ public class AISearchService {
             }
         }
 
+        // modify values
         if (lowerQuery.contains("cheap")) maxPrice = 10000;
         if (lowerQuery.contains("expensive")) minPrice = 50000;
+
+        final double finalMinPrice = minPrice;
+        final double finalMaxPrice = maxPrice;
 
         // 🎯 Extract keywords
         List<String> keywords = new ArrayList<>();
@@ -73,7 +77,7 @@ public class AISearchService {
                                     p.getCompanyName().toLowerCase().contains(k)
                             );
 
-                    boolean priceMatch = p.getPrice() >= minPrice && p.getPrice() <= maxPrice;
+                    boolean priceMatch = p.getPrice() >= finalMinPrice && p.getPrice() <= finalMaxPrice;
 
                     return keywordMatch && priceMatch;
                 })

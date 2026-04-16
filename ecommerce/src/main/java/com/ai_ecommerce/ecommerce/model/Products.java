@@ -1,5 +1,7 @@
 package com.ai_ecommerce.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +11,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "products")
 public class Products {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,12 +23,17 @@ public class Products {
     private String category;
     private String status;
     private int quantity;
+
+    // 🔥 IMPORTANT FIX
+    @JsonProperty("image")   // frontend will receive "image"
     private String imageUrl;
 
-    public Products() {
-    }
+    public Products() {}
 
-    public Products(String name, String description, Double price, String companyName, String category,String status, int quantity, String imageUrl) {
+    public Products(String name, String description, Double price,
+                    String companyName, String category,
+                    String status, int quantity, String imageUrl) {
+
         this.name = name;
         this.description = description;
         this.price = price;
@@ -35,60 +43,78 @@ public class Products {
         this.quantity = quantity;
         this.imageUrl = imageUrl;
     }
-    
+
+    // GETTERS & SETTERS
+
     public Long getId() {
         return id;
     }
-    public void setId(Long id) {
-        this.id = id;
-    }
+
     public String getName() {
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
+
     public String getDescription() {
         return description;
     }
-    public void setDescription(String description) {
-        this.description = description;
-    }
+
     public Double getPrice() {
         return price;
     }
-    public void setPrice(Double price) {
-        this.price = price;
-    }
+
     public String getCompanyName() {
         return companyName;
     }
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
+
     public String getCategory() {
         return category;
     }
-    public void setCategory(String category) {
-        this.category = category;
-    }
+
     public String getStatus() {
         return status;
     }
-    public void setStatus(String status) {
-        this.status = status;
-    }
+
     public int getQuantity() {
         return quantity;
     }
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+
     public String getImageUrl() {
         return imageUrl;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
 }
