@@ -1,93 +1,35 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import API from "../api/api";
-import "./Navbar.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function Navbar({ cartCount }) {
+function Navbar() {
   const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
 
-  const handleSearch = async (searchQuery = query) => {
-    if (!searchQuery.trim()) return;
-    try {
-      const res = await API.get(`/ai-search?query=${searchQuery}`);
-      // Navigate to home with search results (you'd need to update Home to accept this)
-      navigate("/?search=" + searchQuery);
-    } catch (err) {
-      console.error("Search error:", err);
+  const handleSearch = () => {
+    if (query.trim()) {
+      navigate(`/?search=${query}`);
     }
-    setShowSuggestions(false);
-    setQuery("");
   };
-
-  const handleSuggestionClick = (suggestion) => {
-    setQuery(suggestion);
-    handleSearch(suggestion);
-  };
-
-  useEffect(() => {
-    if (!query) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-
-    setShowSuggestions(true);
-    const timer = setTimeout(async () => {
-      try {
-        const res = await API.get(`/suggest?keyword=${query}`);
-        setSuggestions(res.data.data || []);
-      } catch (err) {
-        console.error("Suggestion error:", err);
-        setSuggestions([]);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [query]);
 
   return (
-    <div className="navbar">
-      <Link to="/" className="logo">
-        <span className="logo-text"><img src="/amazon_logo.png" alt="Logo" /></span>
-      </Link>
+    <div className="bg-[#131921] text-white px-6 py-3 flex justify-between items-center">
+      <h1 className="font-bold text-xl">AmazonClone</h1>
 
-      <div className="search-box">
-        <div className="search-input-wrapper">
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-            onFocus={() => query && setShowSuggestions(true)}
-            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-            placeholder="Search Amazon"
-            className="search-input"
-          />
-          {showSuggestions && suggestions.length > 0 && (
-            <div className="suggestions-dropdown">
-              {suggestions.map((suggestion, index) => (
-                <div
-                  key={index}
-                  className="suggestion-item"
-                  onClick={() => handleSuggestionClick(suggestion)}
-                >
-                  🔍 {suggestion}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        <button onClick={() => handleSearch()} className="search-btn">
+      <div className="flex w-1/2">
+        <input
+          className="w-full px-3 py-1 text-black"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search products..."
+        />
+
+        <button
+          onClick={handleSearch}
+          className="bg-yellow-400 px-4"
+        >
           🔍
         </button>
       </div>
-
-      <Link to="/cart" className="cart">
-        <span className="cart-icon">🛒</span>
-        {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
-      </Link>
     </div>
   );
 }

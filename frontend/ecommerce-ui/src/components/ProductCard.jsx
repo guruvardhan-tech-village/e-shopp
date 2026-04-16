@@ -1,47 +1,31 @@
-import { useNavigate } from "react-router-dom";
-import "./ProductCard.css";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
-function ProductCard({ product, onAddToCart }) {
-  const navigate = useNavigate();
-
-  const handleViewDetails = () => {
-    navigate(`/product/${product.id}`);
-  };
-
+function ProductCard({ product }) {
   return (
-    <div className="product-card">
-      <div className="product-image">
-        <img
-          src={product.imageUrl || product.image || product.image_url || "https://via.placeholder.com/250x250?text=No+Image"}
-          alt={product.name || "Product image"}
-          onClick={handleViewDetails}
-        />
-      </div>
-      <div className="product-info">
-        <h3 className="product-name" onClick={handleViewDetails}>
-          {product.name}
-        </h3>
-        <p className="product-description">{product.description?.substring(0, 60)}...</p>
-        <div className="product-rating">
-          <span className="stars">⭐ {product.rating?.toFixed(1) || "N/A"}</span>
-          <span className="reviews">({product.reviews || 0} reviews)</span>
-        </div>
-        <div className="product-footer">
-          <div className="price-section">
-            <span className="price">₹{product.price?.toLocaleString()}</span>
-            {product.originalPrice && (
-              <span className="original-price">₹{product.originalPrice?.toLocaleString()}</span>
-            )}
-          </div>
-          <button
-            className="add-to-cart-btn"
-            onClick={() => onAddToCart(product)}
-          >
-            Add to Cart
-          </button>
-        </div>
-      </div>
-    </div>
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      className="bg-white p-3 rounded shadow hover:shadow-xl"
+    >
+      <img
+        src={product.image}
+        className="h-40 w-full object-cover"
+      />
+
+      <h3 className="font-semibold mt-2">{product.name}</h3>
+
+      <p className="text-yellow-500">⭐⭐⭐⭐☆</p>
+
+      <p className="text-green-600 font-bold text-lg">
+        ₹{product.price}
+      </p>
+
+      <Link to={`/product/${product.id}`}>
+        <button className="mt-2 bg-yellow-400 w-full py-1 rounded">
+          View Product
+        </button>
+      </Link>
+    </motion.div>
   );
 }
 
