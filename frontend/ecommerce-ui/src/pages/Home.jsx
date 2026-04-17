@@ -7,6 +7,7 @@ import {
   filterByCategory
 } from "../api/productApi";
 import ProductCard from "../components/ProductCard";
+import HeroSlider from "../components/HeroSlider";
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -15,6 +16,7 @@ function Home() {
 
   const location = useLocation();
 
+  // 🔥 DATA FETCH (CLEAN)
   useEffect(() => {
     const fetchData = async () => {
       const params = new URLSearchParams(location.search);
@@ -22,20 +24,13 @@ function Home() {
 
       let data;
 
-      // 🔥 PRIORITY: SEARCH
       if (search) {
         data = await searchProducts(search);
-      }
-      // 🔥 CATEGORY FILTER
-      else if (category) {
+      } else if (category) {
         data = await filterByCategory(category);
-      }
-      // 🔥 PRICE FILTER
-      else if (price.min && price.max) {
+      } else if (price.min && price.max) {
         data = await filterByPrice(price.min, price.max);
-      }
-      // 🔥 DEFAULT
-      else {
+      } else {
         data = await getAllProducts();
       }
 
@@ -48,16 +43,51 @@ function Home() {
   return (
     <div className="bg-gray-100 min-h-screen">
 
-      {/* HERO */}
-      <img
-        src="https://images.unsplash.com/photo-1607082349566-187342175e2f"
-        className="w-full h-72 object-cover"
-      />
+      {/* 🔥 HERO SLIDER */}
+      <HeroSlider />
 
-      <div className="flex px-5 mt-5 gap-5">
+      {/* 🔥 OVERLAY CARDS (AMAZON STYLE) */}
+      <div className="relative -mt-32 px-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 z-10">
 
-        {/* SIDEBAR */}
-        <div className="w-1/5 bg-white p-4 shadow rounded">
+        <div className="bg-white p-4 shadow rounded">
+          <h2 className="font-bold mb-2">Gaming</h2>
+          <img
+            src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db"
+            className="h-40 w-full object-cover"
+          />
+        </div>
+
+        <div className="bg-white p-4 shadow rounded">
+          <h2 className="font-bold mb-2">Home Essentials</h2>
+          <img
+            src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7"
+            className="h-40 w-full object-cover"
+          />
+        </div>
+
+        <div className="bg-white p-4 shadow rounded">
+          <h2 className="font-bold mb-2">Kitchen</h2>
+          <img
+            src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f"
+            className="h-40 w-full object-cover"
+          />
+        </div>
+
+        <div className="bg-white p-4 shadow rounded">
+          <h2 className="font-bold mb-2">Fashion</h2>
+          <img
+            src="https://images.unsplash.com/photo-1521335629791-ce4aec67dd53"
+            className="h-40 w-full object-cover"
+          />
+        </div>
+
+      </div>
+
+      {/* 🔥 MAIN CONTENT */}
+      <div className="flex flex-col lg:flex-row px-5 mt-5 gap-5">
+
+        {/* 🔥 SIDEBAR FILTERS */}
+        <div className="w-full lg:w-1/5 bg-white p-4 shadow rounded h-fit">
 
           {/* CATEGORY */}
           <h2 className="font-bold mb-2">Categories</h2>
@@ -68,7 +98,7 @@ function Home() {
             <li onClick={() => setCategory("Accessories")} className="cursor-pointer hover:text-yellow-600">Accessories</li>
           </ul>
 
-          {/* PRICE FILTER */}
+          {/* PRICE */}
           <h2 className="font-bold mb-2">Price</h2>
 
           <input
@@ -88,7 +118,6 @@ function Home() {
           />
 
           <button
-            onClick={() => setPrice({ ...price })}
             className="bg-yellow-400 w-full py-1 rounded"
           >
             Apply
@@ -107,14 +136,14 @@ function Home() {
 
         </div>
 
-        {/* PRODUCTS */}
-        <div className="w-4/5 grid grid-cols-4 gap-5">
+        {/* 🔥 PRODUCTS GRID */}
+        <div className="w-full lg:w-4/5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
           {products.length > 0 ? (
             products.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))
           ) : (
-            <p>No products found</p>
+            <p className="text-gray-500">No products found</p>
           )}
         </div>
 

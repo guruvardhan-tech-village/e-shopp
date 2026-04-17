@@ -1,226 +1,96 @@
-import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
-import "./Cart.css";
 
-function Cart({ setCartCount }) {
-  const [cartItems, setCartItems] = useState([]);
+function Cart() {
+  const { cart, removeFromCart, updateQty } = useContext(CartContext);
+
+  const total = cart.reduce(
+    (acc, item) => acc + item.price * item.qty,
+    0
+  );
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadCartItems();
-  }, []);
-
-  const loadCartItems = () => {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCartItems(cart);
-  };
-
-  const updateQuantity = (productId, newQuantity) => {
-    if (newQuantity <= 0) {
-      removeItem(productId);
-      return;
-    }
-
-    const updatedCart = cartItems.map((item) =>
-      item.id === productId ? { ...item, quantity: newQuantity } : item
-    );
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setCartCount(updatedCart.reduce((sum, item) => sum + item.quantity, 0));
-  };
-
-  const removeItem = (productId) => {
-    const updatedCart = cartItems.filter((item) => item.id !== productId);
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setCartCount(updatedCart.reduce((sum, item) => sum + item.quantity, 0));
-  };
-
-  const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
-
-  const getTotalItems = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0);
-  };
-
-  const getTotalDiscount = () => {
-    return cartItems.reduce((total, item) => {
-      const discount = item.originalPrice
-        ? (item.originalPrice - item.price) * item.quantity
-        : 0;
-      return total + discount;
-    }, 0);
-  };
-
-  const handleCheckout = () => {
-    if (cartItems.length === 0) {
-      alert("Your cart is empty");
-      return;
-    }
-    alert("Proceeding to checkout...\nThis would redirect to payment gateway");
-    // Here you would redirect to payment gateway
-  };
-
-  if (cartItems.length === 0) {
-    return (
-      <div className="cart-container">
-        <div className="empty-cart">
-          <div className="empty-icon">🛒</div>
-          <h2>Your cart is empty</h2>
-          <p>Add items to your cart to get started</p>
-          <button onClick={() => navigate("/")} className="continue-shopping-btn">
-            Continue Shopping
-          </button>
-        </div>
-      </div>
-    );
-  }
+  <button
+    onClick={() => navigate("/checkout")}
+    className="mt-4 w-full bg-yellow-400 py-2 rounded"
+  >
+    Proceed to Checkout
+  </button>
 
   return (
-    <div className="cart-container">
-      <div className="cart-header">
-        <h1>Shopping Cart ({getTotalItems()} items)</h1>
-      </div>
+    <div className="bg-gray-100 min-h-screen p-4">
 
-      <div className="cart-content">
-        <div className="cart-items-section">
-          <div className="cart-items">
-            {cartItems.map((item) => (
-              <div key={item.id} className="cart-item">
-                <div className="item-image">
-                  <img
-                    src={item.image || "https://via.placeholder.com/100"}
-                    alt={item.name}
-                  />
-                </div>
-                <div className="item-details">
-                  <h3 className="item-name">{item.name}</h3>
-                  <p className="item-description">{item.description?.substring(0, 50)}...</p>
-                  <div className="item-rating">
-                    ⭐ {item.rating?.toFixed(1) || "N/A"}
-                  </div>
-                </div>
-                <div className="item-pricing">
-                  <span className="item-price">₹{item.price?.toLocaleString()}</span>
-                  {item.originalPrice && (
-                    <span className="item-original-price">
-                      M.R.P.: ₹{item.originalPrice?.toLocaleString()}
-                    </span>
-                  )}
-                </div>
-                <div className="item-quantity">
-                  <button
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="qty-btn"
-                  >
-                    −
-                  </button>
-                  <input
-                    type="number"
-                    value={item.quantity}
+      <h1 className="text-2xl font-bold mb-5">Shopping Cart</h1>
+
+      <div className="flex flex-col lg:flex-row gap-5">
+
+        {/* LEFT - ITEMS */}
+        <div className="flex-1 space-y-4">
+          {cart.length > 0 ? (
+            cart.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white p-4 rounded shadow flex gap-4"
+              >
+                <img
+                  src={item.image}
+                  className="w-24 h-24 object-contain"
+                />
+
+                <div className="flex-1">
+                  <h2 className="font-semibold">{item.name}</h2>
+
+                  <p className="text-green-600 font-bold">
+                    ₹{item.price}
+                  </p>
+
+                  {/* QTY */}
+                  <select
+                    value={item.qty}
                     onChange={(e) =>
-                      updateQuantity(item.id, Math.max(1, parseInt(e.target.value) || 1))
+                      updateQty(item.id, e.target.value)
                     }
-                    min="1"
-                    className="qty-input"
-                  />
-                  <button
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="qty-btn"
+                    className="border mt-2 p-1"
                   >
-                    +
+                    {[...Array(5)].map((_, i) => (
+                      <option key={i + 1}>{i + 1}</option>
+                    ))}
+                  </select>
+
+                  {/* REMOVE */}
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="block text-red-500 text-sm mt-2"
+                  >
+                    Remove
                   </button>
                 </div>
-                <div className="item-subtotal">
-                  <span className="subtotal-label">Subtotal:</span>
-                  <span className="subtotal-value">
-                    ₹{(item.price * item.quantity)?.toLocaleString()}
-                  </span>
-                </div>
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className="remove-btn"
-                  title="Remove from cart"
-                >
-                  ✕
-                </button>
               </div>
-            ))}
-          </div>
+            ))
+          ) : (
+            <p>Your cart is empty</p>
+          )}
         </div>
 
-        <div className="cart-summary">
-          <div className="summary-box">
-            <h2>Order Summary</h2>
+        {/* RIGHT - TOTAL */}
+        <div className="w-full lg:w-1/4 bg-white p-4 rounded shadow h-fit">
 
-            <div className="summary-row">
-              <span>Subtotal:</span>
-              <span>₹{getTotalPrice()?.toLocaleString()}</span>
-            </div>
+          <h2 className="text-lg font-semibold mb-3">
+            Subtotal ({cart.length} items)
+          </h2>
 
-            <div className="summary-row">
-              <span>Discount:</span>
-              <span className="discount-value">
-                −₹{getTotalDiscount()?.toLocaleString()}
-              </span>
-            </div>
+          <p className="text-xl font-bold text-green-600">
+            ₹{total}
+          </p>
 
-            <div className="summary-row">
-              <span>Shipping:</span>
-              <span className="free-shipping">FREE</span>
-            </div>
+          <button className="mt-4 w-full bg-yellow-400 py-2 rounded">
+            Proceed to Checkout
+          </button>
 
-            <div className="summary-row">
-              <span>Estimated Tax:</span>
-              <span>₹{(getTotalPrice() * 0.18)?.toLocaleString()}</span>
-            </div>
-
-            <div className="summary-divider"></div>
-
-            <div className="summary-total">
-              <span>Total:</span>
-              <span className="total-amount">
-                ₹{(getTotalPrice() + getTotalPrice() * 0.18)?.toLocaleString()}
-              </span>
-            </div>
-
-            <button onClick={handleCheckout} className="checkout-btn">
-              Proceed to Checkout
-            </button>
-
-            <button
-              onClick={() => navigate("/")}
-              className="continue-shopping-btn-secondary"
-            >
-              Continue Shopping
-            </button>
-
-            <div className="savings-info">
-              <p>✓ You're saving ₹{getTotalDiscount()?.toLocaleString()}</p>
-              <p>✓ Free shipping on this order</p>
-              <p>✓ 7-day returns policy</p>
-            </div>
-          </div>
         </div>
-      </div>
 
-      <div className="cart-offers">
-        <h3>Great offers you'll love:</h3>
-        <div className="offers-grid">
-          <div className="offer-card">
-            <span className="offer-badge">FREE</span>
-            <p>Free shipping on orders over ₹500</p>
-          </div>
-          <div className="offer-card">
-            <span className="offer-badge">7 DAYS</span>
-            <p>Easy returns and refunds</p>
-          </div>
-          <div className="offer-card">
-            <span className="offer-badge">SECURE</span>
-            <p>100% secure transactions</p>
-          </div>
-        </div>
       </div>
     </div>
   );

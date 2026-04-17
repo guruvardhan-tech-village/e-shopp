@@ -5,14 +5,17 @@ function ProductCard({ product }) {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="bg-white p-3 rounded shadow hover:shadow-xl"
+      className="bg-white p-3 rounded shadow hover:shadow-xl transition"
     >
       <img
-        src={product.image}
+        src={product.image || "http://localhost:8080/images/default.jpg"}
         className="h-40 w-full object-cover"
+        alt={product.name}
       />
 
-      <h3 className="font-semibold mt-2">{product.name}</h3>
+      <h3 className="font-semibold mt-2 line-clamp-2">
+        {product.name}
+      </h3>
 
       <p className="text-yellow-500">⭐⭐⭐⭐☆</p>
 
