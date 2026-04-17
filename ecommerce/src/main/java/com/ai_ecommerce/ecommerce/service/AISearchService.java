@@ -28,13 +28,13 @@ public class AISearchService {
             if (words[i].equals("under") && i + 1 < words.length) {
                 try {
                     maxPrice = Double.parseDouble(words[i + 1]);
-                } catch (Exception ignored) {}
+                } catch (NumberFormatException ignored) {}
             }
 
             if (words[i].equals("above") && i + 1 < words.length) {
                 try {
                     minPrice = Double.parseDouble(words[i + 1]);
-                } catch (Exception ignored) {}
+                } catch (NumberFormatException ignored) {}
             }
         }
 

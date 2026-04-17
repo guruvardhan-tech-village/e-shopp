@@ -9,13 +9,12 @@ function Product() {
   const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
+    const loadProduct = async () => {
+      const data = await getProductById(id);
+      setProduct(data);
+    };
     loadProduct();
-  }, []);
-
-  const loadProduct = async () => {
-    const data = await getProductById(id);
-    setProduct(data);
-  };
+  }, [id]);
 
   return (
     <div className="p-10 flex gap-10">

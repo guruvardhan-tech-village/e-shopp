@@ -13,7 +13,7 @@ function Navbar() {
 
   return (
     <div className="bg-[#131921] text-white px-6 py-3 flex justify-between items-center">
-      <h1 className="font-bold text-xl">AmazonClone</h1>
+      <h1 className="font-bold text-xl">Amazon</h1>
 
       <div className="flex w-1/2">
         <input
