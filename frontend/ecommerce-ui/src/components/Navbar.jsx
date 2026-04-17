@@ -7,6 +7,7 @@ function Navbar() {
   const [openMenu, setOpenMenu] = useState(false);
   const navigate = useNavigate();
   const { cart } = useContext(CartContext);
+  const token = localStorage.getItem("token");
 
   const handleSearch = () => {
     if (query.trim()) {
@@ -48,8 +49,11 @@ function Navbar() {
 
         {/* ACCOUNT */}
         <div className="hidden md:block text-sm">
-          <p>Hello, Sign in</p>
-          <p className="font-semibold">Account & Lists</p>
+          {token ? (
+            <p className="text-sm">Logged In</p>
+          ) : (
+            <Link to="/login">Login</Link>
+          )}
         </div>
 
         {/* ORDERS */}
