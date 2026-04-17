@@ -27,7 +27,7 @@ function Login() {
 
       <div className="bg-white p-6 rounded shadow w-80">
 
-        <h2 className="text-xl font-bold mb-4">Login</h2>
+        <h2 className="text-xl font-bold mb-4">Sign In</h2>
 
         <input
           type="email"
@@ -51,7 +51,7 @@ function Login() {
           onClick={handleLogin}
           className="w-full bg-yellow-400 py-2 rounded"
         >
-          Login
+          Sign In
         </button>
       </div>
     </div>

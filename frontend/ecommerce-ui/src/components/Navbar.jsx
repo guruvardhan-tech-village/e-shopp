@@ -2,12 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { CartContext } from "../context/CartContext";
 
+
 function Navbar() {
   const [query, setQuery] = useState("");
   const [openMenu, setOpenMenu] = useState(false);
   const navigate = useNavigate();
   const { cart } = useContext(CartContext);
   const token = localStorage.getItem("token");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleSearch = () => {
     if (query.trim()) {
@@ -48,11 +50,66 @@ function Navbar() {
         </div>
 
         {/* ACCOUNT */}
-        <div className="hidden md:block text-sm">
-          {token ? (
-            <p className="text-sm">Logged In</p>
-          ) : (
-            <Link to="/login">Login</Link>
+        <div
+          className="relative hidden md:block text-sm cursor-pointer"
+          onMouseEnter={() => setShowDropdown(true)}
+          onMouseLeave={() => setShowDropdown(false)}
+        >
+          <p>Hello, sign in</p>
+          <p className="font-semibold">Account & Lists ▾</p>
+
+          {/* DROPDOWN */}
+          {showDropdown && (
+            <div className="absolute right-0 top-10 w-[500px] bg-white text-black shadow-lg p-5 z-50">
+
+              {/* SIGN IN BUTTON */}
+              <div className="text-center mb-4">
+                <button 
+                onClick={() => navigate("/login")}
+                className="bg-yellow-400 px-6 py-2 rounded w-full"
+                >                  
+                  Sign in
+                </button>
+                <p className="text-sm mt-2">
+                  New customer?{" "}
+                  <span 
+                  onClick={() => navigate("/signup")}
+                  className="text-blue-500 cursor-pointer">
+                    Start here
+                  </span>
+                </p>
+              </div>
+
+              <hr className="my-3" />
+
+              {/* GRID */}
+              <div className="grid grid-cols-2 gap-5">
+
+                {/* LEFT */}
+                <div>
+                  <h3 className="font-bold mb-2">Your Lists</h3>
+                  <ul className="space-y-1 text-sm">
+                    <li>Create a List</li>
+                    <li>Find a List or Registry</li>
+                  </ul>
+                </div>
+
+                {/* RIGHT */}
+                <div>
+                  <h3 className="font-bold mb-2">Your Account</h3>
+                  <ul className="space-y-1 text-sm">
+                    <li>Account</li>
+                    <li>Orders</li>
+                    <li>Recommendations</li>
+                    <li>Browsing History</li>
+                    <li>Watchlist</li>
+                    <li>Memberships</li>
+                  </ul>
+                </div>
+
+              </div>
+
+            </div>
           )}
         </div>
 
