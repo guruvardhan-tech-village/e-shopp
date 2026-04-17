@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 function Signup() {
   const [form, setForm] = useState({
     name: "",
+    phoneNumber:"",
     email: "",
     password: "",
   });
@@ -38,6 +39,15 @@ function Signup() {
           onChange={(e) =>
             setForm({ ...form, name: e.target.value })
           }
+        />
+
+        <input
+        type="text"
+        placeholder="Mobile Number"
+        className="w-full mb-3 p-2 border"
+        onChange={(e) =>
+            setForm({ ...form, phoneNumber: e.target.value })
+        }
         />
 
         <input
