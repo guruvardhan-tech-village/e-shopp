@@ -12,17 +12,20 @@ export function CartProvider({ children }) {
 
   const addToCart = (product) => {
     const exists = cart.find((item) => item.id === product.id);
+    const qtyToAdd = product.qty ? Number(product.qty) : 1;
 
     if (exists) {
       setCart(
         cart.map((item) =>
           item.id === product.id
             ? { ...item, qty: item.qty + 1 }
+            ? { ...item, qty: item.qty + qtyToAdd }
             : item
         )
       );
     } else {
       setCart([...cart, { ...product, qty: 1 }]);
+      setCart([...cart, { ...product, qty: qtyToAdd }]);
     }
   };
 

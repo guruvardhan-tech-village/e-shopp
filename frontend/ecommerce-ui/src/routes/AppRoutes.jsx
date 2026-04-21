@@ -6,9 +6,13 @@ import Checkout from "../pages/Checkout";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import ProtectedRoute from "../components/ProtectedRoute";
+import Orders from "../pages/Orders";
 
 function AppRoutes() {
   return (
+    
+
+
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/product/:id" element={<Product />} />
@@ -29,6 +33,7 @@ function AppRoutes() {
       {/* AUTH */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
     </Routes>
   );
 }

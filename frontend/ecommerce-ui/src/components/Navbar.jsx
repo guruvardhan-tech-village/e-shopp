@@ -72,7 +72,7 @@ function Navbar() {
           {/* DROPDOWN */}
           {showDropdown && (
             <div className="absolute right-0 top-10 w-[500px] bg-white text-black shadow-lg p-5 z-50">
-
+              <li onClick={() => navigate("/orders")}>Orders</li>
               {/* SIGN IN BUTTON */}
               {!token && (
                 <div className="text-center mb-4">
