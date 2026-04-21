@@ -4,20 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const { cart, removeFromCart, updateQty } = useContext(CartContext);
+  const navigate = useNavigate();
 
   const total = cart.reduce(
     (acc, item) => acc + item.price * item.qty,
     0
   );
-
-  const navigate = useNavigate();
-
-  <button
-    onClick={() => navigate("/checkout")}
-    className="mt-4 w-full bg-yellow-400 py-2 rounded"
-  >
-    Proceed to Checkout
-  </button>
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
@@ -26,7 +18,7 @@ function Cart() {
 
       <div className="flex flex-col lg:flex-row gap-5">
 
-        {/* LEFT - ITEMS */}
+        {/* LEFT */}
         <div className="flex-1 space-y-4">
           {cart.length > 0 ? (
             cart.map((item) => (
@@ -59,7 +51,6 @@ function Cart() {
                     ))}
                   </select>
 
-                  {/* REMOVE */}
                   <button
                     onClick={() => removeFromCart(item.id)}
                     className="block text-red-500 text-sm mt-2"
@@ -74,7 +65,7 @@ function Cart() {
           )}
         </div>
 
-        {/* RIGHT - TOTAL */}
+        {/* RIGHT */}
         <div className="w-full lg:w-1/4 bg-white p-4 rounded shadow h-fit">
 
           <h2 className="text-lg font-semibold mb-3">
@@ -85,7 +76,10 @@ function Cart() {
             ₹{total}
           </p>
 
-          <button className="mt-4 w-full bg-yellow-400 py-2 rounded">
+          <button
+            onClick={() => navigate("/checkout")}
+            className="mt-4 w-full bg-yellow-400 py-2 rounded"
+          >
             Proceed to Checkout
           </button>
 

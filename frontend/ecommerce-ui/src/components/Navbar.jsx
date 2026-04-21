@@ -1,13 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useContext } from "react";
-import { CartContext } from "../context/CartContext";
-
+import { useState } from "react";
+import { useCart } from "../context/CartContext";
 
 function Navbar() {
   const [query, setQuery] = useState("");
   const [openMenu, setOpenMenu] = useState(false);
   const navigate = useNavigate();
-  const { cart } = useContext(CartContext);
+
+  const { cart } = useCart(); // ✅ FIXED
+
   const token = localStorage.getItem("token");
   const userName = localStorage.getItem("userName");
   const [showDropdown, setShowDropdown] = useState(false);

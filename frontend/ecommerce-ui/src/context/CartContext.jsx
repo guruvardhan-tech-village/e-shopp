@@ -1,11 +1,15 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
-const CartContext = createContext();
+export const CartContext = createContext();
+
+// ✅ KEEP THIS (no need to move)
+export const useCart = () => {
+  return useContext(CartContext);
+};
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
 
-  // ADD
   const addToCart = (product) => {
     const exists = cart.find((item) => item.id === product.id);
 
@@ -13,21 +17,19 @@ export function CartProvider({ children }) {
       setCart(
         cart.map((item) =>
           item.id === product.id
-            ? { ...item, qty: item.qty + Number(product.qty || 1) }
+            ? { ...item, qty: item.qty + 1 }
             : item
         )
       );
     } else {
-      setCart([...cart, { ...product, qty: Number(product.qty || 1) }]);
+      setCart([...cart, { ...product, qty: 1 }]);
     }
   };
 
-  // REMOVE
   const removeFromCart = (id) => {
     setCart(cart.filter((item) => item.id !== id));
   };
 
-  // UPDATE QTY
   const updateQty = (id, qty) => {
     setCart(
       cart.map((item) =>
@@ -44,5 +46,3 @@ export function CartProvider({ children }) {
     </CartContext.Provider>
   );
 }
-
-export { CartContext };
