@@ -1,8 +1,11 @@
 package com.ai_ecommerce.ecommerce.config;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -28,6 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         String path = request.getRequestURI();
 
+        // Allow public endpoints
         if (path.startsWith("/api/auth") || path.startsWith("/api/products") || path.startsWith("/images")) {
             filterChain.doFilter(request, response);
             return;
@@ -39,7 +43,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
             try {
                 String email = jwtUtil.extractEmail(token);
-                // You can set user in context (advanced)
+
+                // 🔥 THIS IS THE IMPORTANT PART
+                if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
+
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;

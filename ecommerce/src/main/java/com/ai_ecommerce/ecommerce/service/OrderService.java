@@ -1,11 +1,18 @@
 package com.ai_ecommerce.ecommerce.service;
 
-import com.ai_ecommerce.ecommerce.dto.*;
-import com.ai_ecommerce.ecommerce.model.*;
-import com.ai_ecommerce.ecommerce.repository.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ai_ecommerce.ecommerce.dto.OrderItemRequest;
+import com.ai_ecommerce.ecommerce.dto.OrderRequest;
+import com.ai_ecommerce.ecommerce.model.OrderItem;
+import com.ai_ecommerce.ecommerce.model.Orders;
+import com.ai_ecommerce.ecommerce.model.Products;
+import com.ai_ecommerce.ecommerce.model.User;
+import com.ai_ecommerce.ecommerce.repository.OrderItemRepository;
+import com.ai_ecommerce.ecommerce.repository.OrdersRepository;
+import com.ai_ecommerce.ecommerce.repository.ProductRepository;
+import com.ai_ecommerce.ecommerce.repository.UserRepository;
 
 @Service
 public class OrderService {
@@ -20,42 +27,39 @@ public class OrderService {
     private ProductRepository productRepo;
 
     @Autowired
-    private UserRepository userRepo;
+    private UserRepository userRepository;
 
-    public void placeOrder(OrderRequest request) {
+    public Orders placeOrder(String email, OrderRequest request) {
 
-        // ✅ Get user
-        User user = userRepo.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // ✅ Create Order
         Orders order = new Orders();
         order.setUserId(user.getId());
+        order.setTotalAmount(0);
         order.setStatus("PLACED");
+
+        order = ordersRepo.save(order);
 
         double total = 0;
 
-        Orders savedOrder = ordersRepo.save(order);
+        for (OrderItemRequest itemReq : request.getItems()) {
 
-        // ✅ Save Order Items
-        for (OrderItemRequest item : request.getItems()) {
-
-            Products product = productRepo.findById(item.getProductId())
+            Products product = productRepo.findById(itemReq.getProductId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
 
-            OrderItem oi = new OrderItem();
-            oi.setOrderId(savedOrder.getId());
-            oi.setProductId(product.getId());
-            oi.setQuantity(item.getQuantity());
-            oi.setPrice(product.getPrice());
+            OrderItem item = new OrderItem();
+            item.setOrderId(order.getId());
+            item.setProductId(product.getId());
+            item.setQuantity(itemReq.getQuantity());
+            item.setPrice(product.getPrice());
 
-            total += product.getPrice() * item.getQuantity();
+            orderItemRepo.save(item);
 
-            orderItemRepo.save(oi);
+            total += product.getPrice() * itemReq.getQuantity();
         }
 
-        // ✅ Update total
-        savedOrder.setTotalAmount(total);
-        ordersRepo.save(savedOrder);
+        order.setTotalAmount(total);
+        return ordersRepo.save(order);
     }
 }
