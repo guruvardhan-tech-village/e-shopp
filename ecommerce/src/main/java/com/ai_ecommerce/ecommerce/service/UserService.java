@@ -24,6 +24,7 @@ public class UserService {
 
     // LOGIN
     public User login(String email, String password) {
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

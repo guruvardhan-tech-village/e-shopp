@@ -9,6 +9,7 @@ function Navbar() {
   const navigate = useNavigate();
   const { cart } = useContext(CartContext);
   const token = localStorage.getItem("token");
+  const userName = localStorage.getItem("userName");
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleSearch = () => {
@@ -55,30 +56,41 @@ function Navbar() {
           onMouseEnter={() => setShowDropdown(true)}
           onMouseLeave={() => setShowDropdown(false)}
         >
-          <p>Hello, sign in</p>
-          <p className="font-semibold">Account & Lists ▾</p>
+          {token ? (
+            <>
+              <p>Hello, {userName}</p>
+              <p className="font-semibold">Account & Lists ▾</p>
+            </>
+          ) : (
+            <>
+              <p>Hello, sign in</p>
+              <p className="font-semibold">Account & Lists ▾</p>
+            </>
+          )}
 
           {/* DROPDOWN */}
           {showDropdown && (
             <div className="absolute right-0 top-10 w-[500px] bg-white text-black shadow-lg p-5 z-50">
 
               {/* SIGN IN BUTTON */}
-              <div className="text-center mb-4">
-                <button 
-                onClick={() => navigate("/login")}
-                className="bg-yellow-400 px-6 py-2 rounded w-full"
-                >                  
-                  Sign in
-                </button>
-                <p className="text-sm mt-2">
-                  New customer?{" "}
-                  <span 
-                  onClick={() => navigate("/signup")}
-                  className="text-blue-500 cursor-pointer">
-                    Start here
-                  </span>
-                </p>
-              </div>
+              {!token && (
+                <div className="text-center mb-4">
+                  <button 
+                  onClick={() => navigate("/login")}
+                  className="bg-yellow-400 px-6 py-2 rounded w-full"
+                  >                  
+                    Sign in
+                  </button>
+                  <p className="text-sm mt-2">
+                    New customer?{" "}
+                    <span 
+                    onClick={() => navigate("/signup")}
+                    className="text-blue-500 cursor-pointer">
+                      Start here
+                    </span>
+                  </p>
+                </div>
+              )}
 
               <hr className="my-3" />
 
@@ -108,6 +120,17 @@ function Navbar() {
                 </div>
 
               </div>
+              {token && (
+                <button
+                  onClick={() => {
+                    localStorage.clear();
+                    window.location.reload();
+                  }}
+                  className="mt-4 text-red-500"
+                >
+                  Logout
+                </button>
+              )}
 
             </div>
           )}

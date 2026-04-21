@@ -6,6 +6,7 @@ import Checkout from "../pages/Checkout";
 
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 
 
@@ -18,6 +19,7 @@ function AppRoutes() {
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
     </Routes>
   );
 }

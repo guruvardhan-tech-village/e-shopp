@@ -8,17 +8,23 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const token = await loginUser(form);
 
       // 🔐 STORE TOKEN
-      localStorage.setItem("token", token);
+      const res = await loginUser(form);
+
+      localStorage.setItem("token", res.token);
+      localStorage.setItem("userName", res.name);
+      localStorage.setItem("email", res.email);
 
       alert("Login successful ✅");
 
       navigate("/");
     } catch (err) {
       console.error(err);
-      alert("Login failed ❌");
+
+      const msg = err.response?.data || "Login failed ❌";
+
+      alert(msg);
     }
   };
 

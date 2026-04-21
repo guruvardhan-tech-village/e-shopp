@@ -1,7 +1,14 @@
 package com.ai_ecommerce.ecommerce.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ai_ecommerce.ecommerce.model.User;
 import com.ai_ecommerce.ecommerce.service.JwtUtil;
@@ -27,13 +34,33 @@ public class AuthController {
 
     // LOGIN
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody User user) {
 
-        User existingUser = userService.login(
-                user.getEmail(),
-                user.getPassword()
-        );
+        try {
+            User existingUser = userService.login(
+                    user.getEmail(),
+                    user.getPassword()
+            );
 
-        return jwtUtil.generateToken(existingUser.getEmail());
+            String token = jwtUtil.generateToken(existingUser.getEmail());
+
+            return ResponseEntity.ok(Map.of(
+                    "token", token,
+                    "name", existingUser.getName(),
+                    "email", existingUser.getEmail()
+            ));
+
+        } catch (RuntimeException e) {
+
+            if (e.getMessage().equals("INVALID_EMAIL")) {
+                return ResponseEntity.status(401).body("Invalid Email ❌");
+            }
+
+            if (e.getMessage().equals("INVALID_PASSWORD")) {
+                return ResponseEntity.status(401).body("Invalid Password ❌");
+            }
+
+            return ResponseEntity.status(500).body("Something went wrong");
+        }
     }
 }
