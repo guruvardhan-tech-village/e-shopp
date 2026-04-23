@@ -176,7 +176,7 @@ function Navbar() {
               onClick={() => setOpenMenu(false)}
               className="mb-4"
             >
-              ❌ Close
+              Close
             </button>
 
             <h2 className="font-bold mb-3">Shop by Category</h2>
