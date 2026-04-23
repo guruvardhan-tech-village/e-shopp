@@ -72,7 +72,7 @@ function Navbar() {
           {/* DROPDOWN */}
           {showDropdown && (
             <div className="absolute right-0 top-10 w-[500px] bg-white text-black shadow-lg p-5 z-50">
-              <li onClick={() => navigate("/orders")}>Orders</li>
+              
               {/* SIGN IN BUTTON */}
               {!token && (
                 <div className="text-center mb-4">
@@ -112,7 +112,7 @@ function Navbar() {
                   <h3 className="font-bold mb-2">Your Account</h3>
                   <ul className="space-y-1 text-sm">
                     <li>Account</li>
-                    <li>Orders</li>
+                    <li onClick={() => navigate("/orders")}>Orders</li>
                     <li>Recommendations</li>
                     <li>Browsing History</li>
                     <li>Watchlist</li>

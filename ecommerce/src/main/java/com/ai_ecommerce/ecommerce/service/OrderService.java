@@ -1,5 +1,7 @@
 package com.ai_ecommerce.ecommerce.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,13 @@ public class OrderService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public List<Orders> getOrdersForUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return ordersRepo.findByUserId(user.getId());
+    }
 
     public Orders placeOrder(String email, OrderRequest request) {
 

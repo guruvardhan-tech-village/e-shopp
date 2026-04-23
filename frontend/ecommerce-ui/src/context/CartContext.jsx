@@ -1,8 +1,10 @@
 import { createContext, useContext, useState } from "react";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const CartContext = createContext();
 
 // ✅ KEEP THIS (no need to move)
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => {
   return useContext(CartContext);
 };
@@ -18,13 +20,11 @@ export function CartProvider({ children }) {
       setCart(
         cart.map((item) =>
           item.id === product.id
-            ? { ...item, qty: item.qty + 1 }
             ? { ...item, qty: item.qty + qtyToAdd }
             : item
         )
       );
     } else {
-      setCart([...cart, { ...product, qty: 1 }]);
       setCart([...cart, { ...product, qty: qtyToAdd }]);
     }
   };

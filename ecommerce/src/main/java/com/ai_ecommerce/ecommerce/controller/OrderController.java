@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ai_ecommerce.ecommerce.dto.OrderRequest;
 import com.ai_ecommerce.ecommerce.model.Orders;
-import com.ai_ecommerce.ecommerce.model.User;
-import com.ai_ecommerce.ecommerce.repository.OrdersRepository;
-import com.ai_ecommerce.ecommerce.repository.UserRepository;
 import com.ai_ecommerce.ecommerce.service.OrderService;
 
 
@@ -25,12 +22,6 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private OrdersRepository orderRepository;
 
     // @PostMapping
     // public String placeOrder(@RequestBody OrderRequest request) {
@@ -53,10 +44,7 @@ public class OrderController {
 
         String email = authentication.getName();
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        return ResponseEntity.ok(orderRepository.findByUserId(user.getId()));
+        return ResponseEntity.ok(orderService.getOrdersForUser(email));
     }
     
 }
