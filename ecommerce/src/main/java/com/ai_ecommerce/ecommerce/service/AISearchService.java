@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ai_ecommerce.ecommerce.model.Products;
+import com.ai_ecommerce.ecommerce.model.Product;
 import com.ai_ecommerce.ecommerce.repository.ProductRepository;
 
 @Service
@@ -15,7 +15,7 @@ public class AISearchService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<Products> smartSearch(String query) {
+    public List<Product> smartSearch(String query) {
 
         String lowerQuery = query.toLowerCase();
         String[] words = lowerQuery.split(" ");
@@ -64,7 +64,7 @@ public class AISearchService {
             keywords.add("phone");
         }
 
-        List<Products> products = productRepository.findAll();
+        List<Product> products = productRepository.findAll();
 
         return products.stream()
                 .filter(p -> p.getName() != null && p.getCategory() != null)

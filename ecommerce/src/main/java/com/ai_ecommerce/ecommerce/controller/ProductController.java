@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ai_ecommerce.ecommerce.dto.ProductDTO;
-import com.ai_ecommerce.ecommerce.model.Products;
+import com.ai_ecommerce.ecommerce.model.Product;
 import com.ai_ecommerce.ecommerce.response.ApiResponse;
 import com.ai_ecommerce.ecommerce.service.AISearchService;
 import com.ai_ecommerce.ecommerce.service.ProductService;
@@ -38,7 +38,7 @@ public class ProductController {
     // ✅ ADD PRODUCT
     @PostMapping
     public ApiResponse addProduct(@Valid @RequestBody ProductDTO dto) {
-        Products result = productService.addProducts(dto);
+        Product result = productService.addProducts(dto);
         return new ApiResponse("Product added successfully", result, 201);
     }
 
@@ -105,7 +105,7 @@ public class ProductController {
     // ✅ UPDATE
     @PutMapping("/{id}")
     public ApiResponse updateProduct(@PathVariable Long id,
-                                     @RequestBody Products updatedProduct) {
+                                     @RequestBody Product updatedProduct) {
         return new ApiResponse(
                 "Product updated successfully",
                 productService.updateProduct(id, updatedProduct),
@@ -115,14 +115,14 @@ public class ProductController {
 
     // ✅ PAGINATION
     @GetMapping("/page")
-    public Page<Products> getProductsWithPagination(@RequestParam int page,
+    public Page<Product> getProductsWithPagination(@RequestParam int page,
                                                     @RequestParam int size) {
         return productService.getProductsWithPagination(page, size);
     }
 
     // ✅ SORT + PAGINATION
     @GetMapping("/page-sort")
-    public Page<Products> getProductsWithPaginationAndSort(
+    public Page<Product> getProductsWithPaginationAndSort(
             @RequestParam int page,
             @RequestParam int size,
             @RequestParam String sortBy) {

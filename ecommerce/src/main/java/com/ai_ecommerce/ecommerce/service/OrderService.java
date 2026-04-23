@@ -9,10 +9,10 @@ import com.ai_ecommerce.ecommerce.dto.OrderItemRequest;
 import com.ai_ecommerce.ecommerce.dto.OrderRequest;
 import com.ai_ecommerce.ecommerce.model.OrderItem;
 import com.ai_ecommerce.ecommerce.model.Orders;
-import com.ai_ecommerce.ecommerce.model.Products;
+import com.ai_ecommerce.ecommerce.model.Product;
 import com.ai_ecommerce.ecommerce.model.User;
 import com.ai_ecommerce.ecommerce.repository.OrderItemRepository;
-import com.ai_ecommerce.ecommerce.repository.OrdersRepository;
+import com.ai_ecommerce.ecommerce.repository.OrderRepository;
 import com.ai_ecommerce.ecommerce.repository.ProductRepository;
 import com.ai_ecommerce.ecommerce.repository.UserRepository;
 
@@ -20,7 +20,7 @@ import com.ai_ecommerce.ecommerce.repository.UserRepository;
 public class OrderService {
 
     @Autowired
-    private OrdersRepository ordersRepo;
+    private OrderRepository ordersRepo;
 
     @Autowired
     private OrderItemRepository orderItemRepo;
@@ -54,7 +54,7 @@ public class OrderService {
 
         for (OrderItemRequest itemReq : request.getItems()) {
 
-            Products product = productRepo.findById(itemReq.getProductId())
+            Product product = productRepo.findById(itemReq.getProductId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
 
             OrderItem item = new OrderItem();

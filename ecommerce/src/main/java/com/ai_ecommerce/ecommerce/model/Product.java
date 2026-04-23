@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "products")
-public class Products {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +30,9 @@ public class Products {
     @JsonProperty("image")   // frontend will receive "image"
     private String imageUrl;
 
-    public Products() {}
+    public Product() {}
 
-    public Products(String name, String description, Double price,
+    public Product(String name, String description, Double price,
                     String companyName, String category,
                     String status, int quantity, String imageUrl) {
 
