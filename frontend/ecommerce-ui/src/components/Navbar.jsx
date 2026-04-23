@@ -170,7 +170,6 @@ function Navbar() {
       {/* 🔥 SIDEBAR MENU */}
       {openMenu && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-
           <div className="w-64 bg-white h-full p-4">
             <button
               onClick={() => setOpenMenu(false)}
