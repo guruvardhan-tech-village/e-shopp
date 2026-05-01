@@ -24,7 +24,6 @@ async function getWeatherData(cityValue) {
 
     const data = await response.json();
 
-    // ✅ City name
     document.querySelector(".city-name").textContent = data.location.name;
 
     const temperature = data.current.temp_c;
