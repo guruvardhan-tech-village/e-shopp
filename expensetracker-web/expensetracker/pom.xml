@@ -31,6 +31,8 @@
 		<jjwt.version>0.12.6</jjwt.version>
 		<jqwik.version>1.9.3</jqwik.version>
 		<opencsv.version>5.9</opencsv.version>
+		<!-- Override BOM-managed version (2.0.5 does not exist on Maven Central) -->
+		<testcontainers.version>1.20.4</testcontainers.version>
 	</properties>
 
 	<dependencies>
@@ -105,6 +107,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Spring Boot 4.x: @DataJpaTest moved to separate artifact -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

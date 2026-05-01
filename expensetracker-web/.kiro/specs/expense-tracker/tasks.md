@@ -35,33 +35,33 @@ Implement the full-stack Expense Tracker in two parts: the Spring Boot backend (
     - `BudgetRepository`: `findByUserIdAndMonthAndYear`, `findByUserIdAndCategoryIdAndMonthAndYear`
     - _Requirements: 2.4, 4.1–4.6, 6.3_
 
-  - [ ]* 3.2 Write `@DataJpaTest` repository tests
+  - [x] 3.2 Write `@DataJpaTest` repository tests
     - Test date-range, keyword, amount-range, and pagination queries against H2
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
 
-- [-] 4. Implement JWT security infrastructure
-  - [-] 4.1 Create `JwtConfig`, `JwtTokenProvider`, and `JwtAuthenticationFilter`
+- [x] 4. Implement JWT security infrastructure
+  - [x] 4.1 Create `JwtConfig`, `JwtTokenProvider`, and `JwtAuthenticationFilter`
     - `JwtTokenProvider`: `generateToken(userId)`, `validateToken(token)`, `getUserIdFromToken(token)`; validate signature, expiry, and issuer
     - `JwtAuthenticationFilter`: `OncePerRequestFilter` that extracts the Bearer token, validates it, and sets `SecurityContextHolder`
     - _Requirements: 1.4, 1.6, 1.7, 9.5_
 
-  - [~] 4.2 Create `SecurityConfig` and `CorsConfig`
+  - [x] 4.2 Create `SecurityConfig` and `CorsConfig`
     - Permit `/api/v1/auth/**` without authentication; protect all other `/api/v1/**` routes
     - Register `JwtAuthenticationFilter` before `UsernamePasswordAuthenticationFilter`
     - Configure CORS to allow the frontend origin from properties
     - _Requirements: 1.6, 1.7, 10.4_
 
-- [ ] 5. Implement authentication endpoints
-  - [~] 5.1 Create `RegisterRequest`, `LoginRequest`, `AuthResponse` DTOs with Bean Validation annotations
+- [x] 5. Implement authentication endpoints
+  - [x] 5.1 Create `RegisterRequest`, `LoginRequest`, `AuthResponse` DTOs with Bean Validation annotations
     - `RegisterRequest`: `@Email`, `@NotBlank` email; `@Size(min=8)` password; `@NotBlank` displayName
     - _Requirements: 1.1, 1.3_
 
-  - [~] 5.2 Implement `AuthService` with `register` and `login` methods
+  - [x] 5.2 Implement `AuthService` with `register` and `login` methods
     - `register`: check for duplicate email (throw `DuplicateResourceException` on conflict), hash password with BCrypt (cost ≥ 10), persist `User`
     - `login`: load user by email, verify BCrypt hash, generate and return JWT
     - _Requirements: 1.1, 1.2, 1.4, 1.5, 9.3_
 
-  - [~] 5.3 Implement `AuthController` with `POST /api/v1/auth/register` and `POST /api/v1/auth/login`
+  - [x] 5.3 Implement `AuthController` with `POST /api/v1/auth/register` and `POST /api/v1/auth/login`
     - Return `ApiResponse` envelope with 201 / 200 status codes
     - _Requirements: 1.1, 1.4, 10.1, 10.2_
 
@@ -75,17 +75,17 @@ Implement the full-stack Expense Tracker in two parts: the Spring Boot backend (
   - Implement `GlobalExceptionHandler` (`@RestControllerAdvice`) mapping all exceptions from the design's error table to the correct HTTP status codes and `ApiResponse` envelope
   - _Requirements: 10.2, 10.3, 10.5_
 
-- [ ] 7. Implement category management
-  - [~] 7.1 Create `CategoryRequest` DTO and `CategoryDto` response DTO
+- [x] 7. Implement category management
+  - [x] 7.1 Create `CategoryRequest` DTO and `CategoryDto` response DTO
     - _Requirements: 3.2_
 
-  - [~] 7.2 Implement `CategoryService`
+  - [x] 7.2 Implement `CategoryService`
     - `getCategories(userId)`: return default categories + user's custom categories
     - `createCategory(userId, name)`: check for duplicate (throw `DuplicateResourceException`), persist
     - `deleteCategory(userId, categoryId)`: reject if default (throw `AccessDeniedException`); reassign all associated expenses to "Other" before deleting
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
 
-  - [~] 7.3 Implement `CategoryController` with `GET`, `POST`, `DELETE /api/v1/categories`
+  - [x] 7.3 Implement `CategoryController` with `GET`, `POST`, `DELETE /api/v1/categories`
     - _Requirements: 3.1–3.7, 10.1, 10.2_
 
   - [ ]* 7.4 Write property test for category deletion reassignment (Property 9)
@@ -99,12 +99,12 @@ Implement the full-stack Expense Tracker in two parts: the Spring Boot backend (
     - Test duplicate name rejection, default category deletion rejection, expense reassignment
     - _Requirements: 3.2, 3.3, 3.6, 3.7_
 
-- [ ] 8. Implement expense CRUD
-  - [~] 8.1 Create `ExpenseRequest`, `ExpenseDto`, and `PagedExpenseResponse` DTOs with Bean Validation annotations
+- [x] 8. Implement expense CRUD
+  - [x] 8.1 Create `ExpenseRequest`, `ExpenseDto`, and `PagedExpenseResponse` DTOs with Bean Validation annotations
     - `@NotNull @Positive` on `amount`; `@NotNull` on `date` and `categoryId`; `@NotBlank` on `description`
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [~] 8.2 Implement `ExpenseService` CRUD methods
+  - [x] 8.2 Implement `ExpenseService` CRUD methods
     - `createExpense(userId, request)`: validate ownership of category, persist expense
     - `getExpenses(userId, filters, pageable)`: scope query to userId, apply optional date/category/keyword/amount filters, return `PagedExpenseResponse`
     - `getExpenseById(userId, id)`: return expense or throw `ResourceNotFoundException`; throw `AccessDeniedException` if not owned by userId
@@ -112,7 +112,7 @@ Implement the full-stack Expense Tracker in two parts: the Spring Boot backend (
     - `deleteExpense(userId, id)`: ownership check, delete
     - _Requirements: 2.1–2.10, 4.1–4.7, 9.1, 9.2_
 
-  - [~] 8.3 Implement `ExpenseController` with full CRUD endpoints at `/api/v1/expenses`
+  - [x] 8.3 Implement `ExpenseController` with full CRUD endpoints at `/api/v1/expenses`
     - Support query params: `startDate`, `endDate`, `categoryId`, `keyword`, `minAmount`, `maxAmount`, `page`, `size`
     - _Requirements: 2.1–2.10, 4.1–4.7, 10.1, 10.2_
 

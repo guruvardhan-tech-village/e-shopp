@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
     name = "budgets",
     uniqueConstraints = {
         @UniqueConstraint(name = "uq_budget_user_category_month_year",
-            columnNames = {"user_id", "category_id", "month", "year"})
+            columnNames = {"user_id", "category_id", "expense_month", "expense_year"})
     }
 )
 @Data
@@ -30,10 +30,10 @@ public class Budget {
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "expense_month")
     private int month;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "expense_year")
     private int year;
 
     @Column(nullable = false, precision = 15, scale = 2)
