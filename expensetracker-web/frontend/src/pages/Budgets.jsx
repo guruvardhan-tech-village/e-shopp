@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Wallet, AlertTriangle } from 'lucide-react';
+import { Plus, Wallet, AlertTriangle, Trash2 } from 'lucide-react';
 import api from '../services/api';
+import { useCurrency } from '../context/CurrencyContext';
 
 const Budgets = () => {
   const [budgets, setBudgets] = useState([]);
@@ -8,6 +9,7 @@ const Budgets = () => {
   const [loading, setLoading] = useState(true);
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
+  const { formatCurrency, currentSymbol } = useCurrency();
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -145,8 +147,8 @@ const Budgets = () => {
                 </div>
 
                 <div className="mb-2 flex justify-between text-sm">
-                  <span className="text-[var(--text-muted)]">Spent: <span className="font-bold text-[var(--text-main)]">${spent.toFixed(2)}</span></span>
-                  <span className="text-[var(--text-muted)]">Limit: <span className="font-bold text-[var(--text-main)]">${budget.limitAmount.toFixed(2)}</span></span>
+                  <span className="text-[var(--text-muted)]">Spent: <span className="font-bold text-[var(--text-main)]">{formatCurrency(spent)}</span></span>
+                  <span className="text-[var(--text-muted)]">Limit: <span className="font-bold text-[var(--text-main)]">{formatCurrency(budget.limitAmount)}</span></span>
                 </div>
 
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
@@ -197,7 +199,7 @@ const Budgets = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Monthly Limit ($)</label>
+                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Monthly Limit ({currentSymbol})</label>
                 <input
                   type="number"
                   name="limitAmount"

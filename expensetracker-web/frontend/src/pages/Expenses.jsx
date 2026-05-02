@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, MoreVertical, Edit2, Trash2 } from 'lucide-react';
 import api from '../services/api';
+import { useCurrency } from '../context/CurrencyContext';
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { formatCurrency, currentSymbol } = useCurrency();
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -167,7 +169,7 @@ const Expenses = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap font-bold text-[var(--text-main)]">
-                      ${exp.amount.toFixed(2)}
+                      {formatCurrency(exp.amount)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -205,7 +207,7 @@ const Expenses = () => {
             </div>
             <form onSubmit={handleAddExpense} className="p-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Amount ($)</label>
+                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Amount ({currentSymbol})</label>
                 <input
                   type="number"
                   name="amount"

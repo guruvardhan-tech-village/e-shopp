@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useCurrency } from '../context/CurrencyContext';
 import { 
   LayoutDashboard, 
   Receipt, 
@@ -87,6 +88,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 const Header = ({ toggleSidebar }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const { user } = useAuth();
+  const { currency, setCurrency, currencies } = useCurrency();
   
   const getInitials = (name) => {
     if (!name) return 'U';
@@ -108,7 +110,17 @@ const Header = ({ toggleSidebar }) => {
       
       <div className="flex-1"></div>
       
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-3 sm:space-x-4">
+        <select 
+          value={currency} 
+          onChange={(e) => setCurrency(e.target.value)}
+          className="bg-[var(--bg-main)] border border-[var(--border-color)] text-[var(--text-main)] text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-1.5 dark:bg-gray-800 dark:border-gray-600 outline-none"
+        >
+          {currencies.map(c => (
+            <option key={c.code} value={c.code}>{c.code} ({c.symbol})</option>
+          ))}
+        </select>
+        
         <button
           onClick={toggleTheme}
           className="p-2 rounded-full text-[var(--text-muted)] hover:bg-[var(--bg-main)] transition-colors duration-200"
