@@ -86,6 +86,16 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
 const Header = ({ toggleSidebar }) => {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { user } = useAuth();
+  
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
 
   return (
     <header className="sticky top-0 z-10 bg-[var(--bg-card)]/80 backdrop-blur-md border-b border-[var(--border-color)] h-16 flex items-center justify-between px-4 sm:px-6">
@@ -106,8 +116,8 @@ const Header = ({ toggleSidebar }) => {
         >
           {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
-        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary-500 to-accent-500 flex items-center justify-center text-white font-bold shadow-md">
-          U
+        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary-500 to-accent-500 flex items-center justify-center text-white font-bold shadow-md text-sm">
+          {getInitials(user?.displayName)}
         </div>
       </div>
     </header>

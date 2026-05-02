@@ -12,14 +12,13 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('token');
+      const displayName = localStorage.getItem('displayName');
       if (token) {
         try {
-          // Assuming there's an endpoint to get the current user profile or token validation
-          // We don't have a /me endpoint explicitly in the backend description,
-          // but we can decode the JWT or just set true. For simplicity, we just set true if token exists.
-          setUser({ token });
+          setUser({ token, displayName });
         } catch (error) {
           localStorage.removeItem('token');
+          localStorage.removeItem('displayName');
         }
       }
       setLoading(false);
@@ -29,9 +28,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const res = await api.post('/auth/login', credentials);
-    const { token } = res.data.data;
+    const { token, displayName } = res.data.data;
     localStorage.setItem('token', token);
-    setUser({ token });
+    if (displayName) {
+      localStorage.setItem('displayName', displayName);
+    }
+    setUser({ token, displayName });
     return res.data;
   };
 
@@ -42,6 +44,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('displayName');
     setUser(null);
   };
 
