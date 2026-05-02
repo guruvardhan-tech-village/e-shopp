@@ -4,10 +4,25 @@ import api from '../services/api';
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    amount: '',
+    categoryId: '',
+    date: new Date().toISOString().split('T')[0],
+    description: '',
+    paymentMethod: 'CASH'
+  });
 
   useEffect(() => {
     fetchExpenses();
+    fetchCategories();
   }, []);
 
   const fetchExpenses = async () => {
@@ -21,6 +36,60 @@ const Expenses = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const res = await api.get('/categories');
+      setCategories(res.data.data || []);
+      // Set default category if available
+      if (res.data.data && res.data.data.length > 0 && !formData.categoryId) {
+        setFormData(prev => ({ ...prev, categoryId: res.data.data[0].id }));
+      }
+    } catch (err) {
+      console.error('Failed to fetch categories', err);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddExpense = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await api.post('/expenses', {
+        ...formData,
+        amount: parseFloat(formData.amount),
+        categoryId: parseInt(formData.categoryId)
+      });
+      setIsModalOpen(false);
+      setFormData({
+        amount: '',
+        categoryId: categories.length > 0 ? categories[0].id : '',
+        date: new Date().toISOString().split('T')[0],
+        description: '',
+        paymentMethod: 'CASH'
+      });
+      fetchExpenses(); // Refresh the list
+    } catch (err) {
+      console.error('Failed to add expense', err);
+      alert(err.response?.data?.message || 'Failed to add expense');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this expense?')) return;
+    try {
+      await api.delete(`/expenses/${id}`);
+      fetchExpenses();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to delete expense');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -28,7 +97,10 @@ const Expenses = () => {
           <h1 className="text-2xl font-bold text-[var(--text-main)]">Expenses</h1>
           <p className="text-[var(--text-muted)]">Manage your transactions</p>
         </div>
-        <button className="btn-primary flex items-center shrink-0">
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="btn-primary flex items-center shrink-0"
+        >
           <Plus size={18} className="mr-2" />
           Add Expense
         </button>
@@ -102,7 +174,10 @@ const Expenses = () => {
                         <button className="p-1.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg">
                           <Edit2 size={16} />
                         </button>
-                        <button className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg">
+                        <button 
+                          onClick={() => handleDelete(exp.id)}
+                          className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"
+                        >
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -114,6 +189,114 @@ const Expenses = () => {
           </table>
         </div>
       </div>
+
+      {/* Add Expense Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-[var(--bg-card)] rounded-xl w-full max-w-md shadow-xl overflow-hidden border border-[var(--border-color)]">
+            <div className="p-4 border-b border-[var(--border-color)] flex justify-between items-center">
+              <h2 className="text-lg font-bold text-[var(--text-main)]">Add New Expense</h2>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="text-[var(--text-muted)] hover:text-[var(--text-main)]"
+              >
+                &times;
+              </button>
+            </div>
+            <form onSubmit={handleAddExpense} className="p-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Amount ($)</label>
+                <input
+                  type="number"
+                  name="amount"
+                  step="0.01"
+                  min="0.01"
+                  className="input-field"
+                  placeholder="0.00"
+                  value={formData.amount}
+                  onChange={handleInputChange}
+                  required
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Description</label>
+                <input
+                  type="text"
+                  name="description"
+                  className="input-field"
+                  placeholder="e.g., Grocery shopping"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Category</label>
+                <select
+                  name="categoryId"
+                  className="input-field"
+                  value={formData.categoryId}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="" disabled>Select a category</option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Date</label>
+                  <input
+                    type="date"
+                    name="date"
+                    className="input-field"
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[var(--text-muted)] mb-1">Payment Method</label>
+                  <select
+                    name="paymentMethod"
+                    className="input-field"
+                    value={formData.paymentMethod}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="CASH">Cash</option>
+                    <option value="CREDIT_CARD">Credit Card</option>
+                    <option value="DEBIT_CARD">Debit Card</option>
+                    <option value="BANK_TRANSFER">Bank Transfer</option>
+                    <option value="UPI">UPI</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="btn-secondary"
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Saving...' : 'Save Expense'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
