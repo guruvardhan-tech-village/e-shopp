@@ -116,49 +116,49 @@ Implement the full-stack Expense Tracker in two parts: the Spring Boot backend (
     - Support query params: `startDate`, `endDate`, `categoryId`, `keyword`, `minAmount`, `maxAmount`, `page`, `size`
     - _Requirements: 2.1–2.10, 4.1–4.7, 10.1, 10.2_
 
-  - [ ]* 8.4 Write property test for expense amount validation (Property 2)
+  - [x] 8.4 Write property test for expense amount validation (Property 2)
     - **Property 2: Expense amount validation rejects non-positive values**
     - **Validates: Requirements 2.3**
     - `// Feature: expense-tracker, Property 2: amount_validation_rejects_non_positive`
     - Use jqwik in `ExpenseValidationPropertyTest`; generate random zero/negative `BigDecimal` values, assert 400 response and no persistence
     - _Requirements: 2.3_
 
-  - [ ]* 8.5 Write property test for expense list scoping and ordering (Property 3)
+  - [ ] 8.5 Write property test for expense list scoping and ordering (Property 3)
     - **Property 3: Expense list is scoped to the authenticated user and ordered by date descending**
     - **Validates: Requirements 2.4, 9.1**
     - `// Feature: expense-tracker, Property 3: expense_list_scoped_and_ordered`
     - Use jqwik in `ExpenseListPropertyTest`; generate random expense sets for multiple users, assert response contains exactly the requesting user's expenses in descending date order
     - _Requirements: 2.4, 9.1_
 
-  - [ ]* 8.6 Write property test for date range filter (Property 4)
+  - [ ] 8.6 Write property test for date range filter (Property 4)
     - **Property 4: Date range filter returns only expenses within the inclusive range**
     - **Validates: Requirements 4.1**
     - `// Feature: expense-tracker, Property 4: date_range_filter_correctness`
     - Use jqwik in `ExpenseFilterPropertyTest`; generate random `[startDate, endDate]` ranges and expense sets, assert every returned expense falls within the range
     - _Requirements: 4.1_
 
-  - [ ]* 8.7 Write property test for amount range filter (Property 5)
+  - [ ] 8.7 Write property test for amount range filter (Property 5)
     - **Property 5: Amount range filter returns only expenses within the inclusive range**
     - **Validates: Requirements 4.4**
     - `// Feature: expense-tracker, Property 5: amount_range_filter_correctness`
     - Use jqwik in `ExpenseFilterPropertyTest`; generate random `[minAmount, maxAmount]` ranges and expense sets, assert every returned expense amount falls within the range
     - _Requirements: 4.4_
 
-  - [ ]* 8.8 Write property test for keyword filter (Property 6)
+  - [ ] 8.8 Write property test for keyword filter (Property 6)
     - **Property 6: Keyword filter returns only expenses whose description contains the keyword (case-insensitive)**
     - **Validates: Requirements 4.3**
     - `// Feature: expense-tracker, Property 6: keyword_filter_correctness`
     - Use jqwik in `ExpenseFilterPropertyTest`; generate random keyword strings and expense descriptions, assert all returned expenses contain the keyword (case-insensitive)
     - _Requirements: 4.3_
 
-  - [ ]* 8.9 Write property test for pagination metadata consistency (Property 7)
+  - [ ] 8.9 Write property test for pagination metadata consistency (Property 7)
     - **Property 7: Pagination response metadata is consistent with the result set**
     - **Validates: Requirements 4.5, 4.6**
     - `// Feature: expense-tracker, Property 7: pagination_metadata_consistency`
     - Use jqwik in `PaginationPropertyTest`; generate random page/size combinations and expense sets, assert `totalElements`, `totalPages`, and `currentPage` are mathematically consistent
     - _Requirements: 4.5, 4.6_
 
-  - [ ]* 8.10 Write unit tests for `ExpenseService`
+  - [ ] 8.10 Write unit tests for `ExpenseService`
     - Test ownership enforcement (403 for wrong user), missing field validation, update and delete flows
     - _Requirements: 2.1–2.10, 9.1, 9.2_
 
