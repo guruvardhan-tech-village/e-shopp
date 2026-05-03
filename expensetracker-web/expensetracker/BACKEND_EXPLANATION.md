@@ -18,7 +18,7 @@ Spring Boot applications follow a very specific "Layered Architecture". Think of
 Models represent your Database Tables. Each file here creates a table in PostgreSQL.
 
 ### `User.java`
-- Represents a person using the app. 
+- Represents a person using the app.
 - Contains `id`, `email`, `password` (hashed for security), and `displayName`.
 - **How to modify:** If you want users to have a "Phone Number", you would add `private String phoneNumber;` here.
 
